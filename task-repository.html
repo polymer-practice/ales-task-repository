@@ -1,24 +1,7 @@
 <link rel="import" href="../polymer/polymer-element.html">
 
 <dom-module id="task-repository">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
-    </style>
-    <h2>Hello [[prop1]]!</h2>
-  </template>
-
   <script>
-    /**
-     * `task-repository`
-     * 
-     *
-     * @customElement
-     * @polymer
-     * @demo demo/index.html
-     */
     class TaskRepository extends Polymer.Element {
       constructor() {
         super();
@@ -155,23 +138,17 @@
           limit: {
             type: Number,
             value: 5
-          },
-          observer: '_onOffsetChange'
+          }
         };
       }
       static get observers() {
-        return ['_onSizeChange(limit, offset)'];
+        return ['_getPage(limit, offset)'];
       }
-      _onSizeChange(currentValue, prevValue) {
-        console.log("value 1 -> " + currentValue);
-        console.log("value 2 -> " + currentValue);
-        this.dispatchEvent(pageEvent);
 
-      }
-      getPage() {
+      _getPage(limit, offset) {
         const leng = this.taskListRepo.length;
-        let start = this.offset;
-        let end = this.offset + this.limit;
+        let start = offset;
+        let end = offset + limit;
         let pageEvent;
         if (start < 0) {
           start = 0;
@@ -186,8 +163,8 @@
             composed: true,
             detail: {
               total: leng,
-              offset: this.offset,
-              limit: this.limit,
+              offset: offset,
+              limit: limit,
               page: this.taskListRepo.slice(start, end)
             }
           }
