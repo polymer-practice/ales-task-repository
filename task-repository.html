@@ -138,6 +138,14 @@
           limit: {
             type: Number,
             value: 5
+          },
+          newTask: {
+            type: Object,
+            observer: '_taskCreated'
+          },
+          updateTask: {
+            type: Object,
+            observer: '_taskUpdated'
           }
         };
       }
@@ -173,6 +181,48 @@
           this.dispatchEvent(pageEvent)
         }, 300)
       }
+
+      _taskCreated(newTask) {
+        let taskCreated = new CustomEvent(
+          'task-created',
+          {
+            bubbles: true,
+            composed: true
+          }
+        )
+        this.taskListRepo.unshift(newTask);
+        setTimeout(() => {
+          this.dispatchEvent(taskCreated);
+          console.log('Tarea creada -> ' + JSON.stringify(newTask));
+        }, 300)
+      }
+
+      _taskUpdated(newTaskValues) {
+        let taskUpdated = new CustomEvent(
+          'task-updated',
+          {
+            bubbles: true,
+            composed: true
+          }
+        )
+
+        if (typeof this.taskListRepo[newTaskValues.key] !== 'undefined') {
+          /* Update data */
+          this.taskListRepo[newTaskValues.key].title = newTaskValues.title;
+          this.taskListRepo[newTaskValues.key].done = newTaskValues.done;
+          this.taskListRepo[newTaskValues.key].canceled = newTaskValues.canceled;
+        }else{
+          console.warning('La tarea '+JSON.stringify(newTaskValues)+' no existe' )
+        }
+
+
+        setTimeout(() => {
+          this.dispatchEvent(taskUpdated);
+          console.log('Tarea actualizada con los valores -> ' + JSON.stringify(newTaskValues));
+        }, 300)
+
+      }
+
     }
 
     window.customElements.define(TaskRepository.is, TaskRepository);
