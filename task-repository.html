@@ -167,19 +167,6 @@
         console.log("value 2 -> " + currentValue);
         this.dispatchEvent(pageEvent);
 
-        let onSizeChange = new CustomEvent('onSizeChange', {
-          bubbles: true,
-          composed: true,
-          detail: {
-            total: leng,
-            offset: this.offset,
-            limit: this.limit,
-            page: this.taskListRepo.slice(start, end)
-          }
-        })
-        this.dispatchEvent(pageEvent);
-
-
       }
       getPage() {
         const leng = this.taskListRepo.length;
